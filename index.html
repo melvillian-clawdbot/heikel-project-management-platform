@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heikel Project Management Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: white;
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        .nav-diagram {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .cta a {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .cta a:hover {
+            background: #764ba2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            background: white;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Heikel Project Management Platform</h1>
+        <p>Comprehensive Construction & Trades Management Solution</p>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h2>Overview</h2>
+            <p>A comprehensive construction and trades project management platform designed to streamline workflows for contractors, employees, clients, and vendors.</p>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h3>For Clients</h3>
+                    <ul>
+                        <li>View upcoming and past work</li>
+                        <li>Track estimates and invoices</li>
+                        <li>Upload photos and videos</li>
+                        <li>Direct communication with project managers</li>
+                        <li>Payment management</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>For Employees</h3>
+                    <ul>
+                        <li>Time clock in/out</li>
+                        <li>Project notes and documentation</li>
+                        <li>Work scheduling</li>
+                        <li>Direct communication with HQ</li>
+                        <li>View upcoming assignments</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>For Subcontractors/Vendors</h3>
+                    <ul>
+                        <li>RFQ (Request for Quote) management</li>
+                        <li>Work scheduling and tracking</li>
+                        <li>Invoice and payment tracking</li>
+                        <li>Project-specific permissions</li>
+                        <li>Back charge management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>App Shell / Navigation</h2>
+            <div class="nav-diagram">┌─────────────────┐
+│  TITLE        ≡  │
+├─────────────────┤
+│  MAN WORK       │
+├─────────────────┤
+│  OTHER          │
+├─────────────────┤
+│  ☐ EMERGENCY    │
+└─────────────────┘</div>
+
+            <h3>Communication Actions</h3>
+            <ul>
+                <li>→ Voice Memo</li>
+                <li>→ Text</li>
+                <li>→ Upload Video</li>
+                <li>→ Upload Photo</li>
+                <li>→ Link to Speak to Person
+                    <ul><li>↳ Schedule Call</li></ul>
+                </li>
+            </ul>
+
+            <h3>Dashboard Sections</h3>
+            <ul>
+                <li><strong>Upcoming Work</strong>
+                    <ul>
+                        <li>↳ Schedule</li>
+                        <li>Shows Date/Time or "Not Scheduled"</li>
+                        <li>Estimates</li>
+                    </ul>
+                </li>
+                <li><strong>Past Work</strong></li>
+                <li><strong>Security</strong></li>
+                <li><strong>Photos / Videos</strong></li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Account Management</h2>
+            <ul>
+                <li><strong>Users</strong> - Manage user permissions</li>
+                <li><strong>Payment</strong> - Account statements, invoices, and payment methods</li>
+                <li><strong>Speak to My Project Manager</strong> - Multi-channel communication (text, voice, photo/video, email, phone)</li>
+                <li><strong>Preferences</strong> - Notification settings by user</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Clients / Customers</h2>
+            <ul>
+                <li><strong>Customer List</strong> - Property ID, address, map/photos, user management</li>
+                <li><strong>Estimates</strong> - Track active, accepted, and declined estimates</li>
+                <li><strong>Payment</strong> - Statements, invoices, and payments</li>
+                <li><strong>Work</strong> - Scheduling, upcoming work, past work logs, daily reports</li>
+                <li><strong>Notes / Files</strong> - Client communication, contracts, work orders, RFPs, profiles</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Employees</h2>
+            <ul>
+                <li><strong>Employee List</strong> - Employee ID, personal info, tax & benefits</li>
+                <li><strong>Projects</strong> - Time logging, clock in/out, current work, notes, photos, videos</li>
+                <li><strong>Contact HQ</strong> - Text in app, text, walkie-talkie, email, phone</li>
+                <li><strong>Permissions</strong> - Role-based access control</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Subs / Vendors</h2>
+            <ul>
+                <li><strong>S&V List</strong> - Vendor ID, business info, EIN, insurance</li>
+                <li><strong>Users</strong> - Contact info, permissions, project lists</li>
+                <li><strong>RFQ</strong> - Open, accepted, and declined requests</li>
+                <li><strong>Work</strong> - Scheduled/unscheduled work, completed work, punch lists</li>
+                <li><strong>Payments</strong> - Unpaid/paid RFQs, back charges, invoices, statements</li>
+            </ul>
+        </div>
+
+        <div class="cta">
+            <a href="https://github.com/melvillian-clawdbot/heikel-project-management-platform">View on GitHub</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>Heikel Project Management Platform - Architecture documentation available on <a href="https://github.com/melvillian-clawdbot/heikel-project-management-platform">GitHub</a></p>
+    </footer>
+</body>
+</html>
