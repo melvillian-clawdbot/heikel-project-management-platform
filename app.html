@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heikel Project Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.3rem;
+        }
+
+        .menu-icon {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            border-left-color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.2);
+            border-left-color: white;
+        }
+
+        .emergency-toggle {
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .emergency-toggle input {
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            background: #f5f5f5;
+        }
+
+        .content-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-header h2 {
+            color: #667eea;
+            font-size: 1.8rem;
+        }
+
+        .content-body {
+            padding: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Lists */
+        .list-item {
+            background: #f9f9f9;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .list-item-content h4 {
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .list-item-content p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: #667eea;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Communication Actions */
+        .comm-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .comm-btn {
+            padding: 0.8rem 1rem;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .comm-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+
+            .sidebar.mobile-open {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>HEIKEL PM</h1>
+                <span class="menu-icon" onclick="toggleSidebar()">≡</span>
+            </div>
+            <div class="nav-menu">
+                <div class="nav-item active" onclick="navigateTo('dashboard')">
+                    📊 Dashboard
+                </div>
+                <div class="nav-item" onclick="navigateTo('clients')">
+                    👥 Clients
+                </div>
+                <div class="nav-item" onclick="navigateTo('employees')">
+                    👷 Employees
+                </div>
+                <div class="nav-item" onclick="navigateTo('vendors')">
+                    🏢 Subs / Vendors
+                </div>
+                <div class="nav-item" onclick="navigateTo('account')">
+                    ⚙️ Account
+                </div>
+            </div>
+            <div class="emergency-toggle">
+                <input type="checkbox" id="emergency">
+                <label for="emergency">EMERGENCY</label>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div id="content-area"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal Title</h3>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage
+        const storage = {
+            get: (key) => {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : null;
+            },
+            set: (key, value) => {
+                localStorage.setItem(key, JSON.stringify(value));
+            },
+            init: () => {
+                if (!storage.get('clients')) {
+                    storage.set('clients', [
+                        {
+                            id: 1,
+                            name: 'John Smith',
+                            propId: 'PROP-001',
+                            address: '123 Main St, Springfield',
+                            email: 'john@example.com',
+                            phone: '555-0101',
+                            primaryContact: 'John Smith',
+                            secondaryContact: 'Jane Smith'
+                        }
+                    ]);
+                }
+                if (!storage.get('employees')) {
+                    storage.set('employees', [
+                        {
+                            id: 1,
+                            empId: 'EMP-001',
+                            name: 'Mike Johnson',
+                            role: 'Foreman',
+                            email: 'mike@heikel.com',
+                            phone: '555-0201',
+                            clockedIn: false
+                        }
+                    ]);
+                }
+                if (!storage.get('vendors')) {
+                    storage.set('vendors', [
+                        {
+                            id: 1,
+                            vendorId: 'VEN-001',
+                            businessName: 'ABC Plumbing',
+                            contact: 'Bob Wilson',
+                            email: 'bob@abcplumbing.com',
+                            phone: '555-0301',
+                            ein: '12-3456789'
+                        }
+                    ]);
+                }
+                if (!storage.get('work')) {
+                    storage.set('work', [
+                        {
+                            id: 1,
+                            clientId: 1,
+                            title: 'Kitchen Renovation',
+                            description: 'Complete kitchen remodel',
+                            status: 'scheduled',
+                            scheduledDate: '2026-03-01',
+                            estimatedCost: 15000
+                        }
+                    ]);
+                }
+                if (!storage.get('estimates')) {
+                    storage.set('estimates', []);
+                }
+                if (!storage.get('invoices')) {
+                    storage.set('invoices', []);
+                }
+                if (!storage.get('rfqs')) {
+                    storage.set('rfqs', []);
+                }
+            }
+        };
+
+        // Initialize storage
+        storage.init();
+
+        // Navigation
+        let currentView = 'dashboard';
+
+        function navigateTo(view) {
+            currentView = view;
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+            renderContent();
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('mobile-open');
+        }
+
+        // Modal Functions
+        function openModal(title, content) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Render Functions
+        function renderContent() {
+            const contentArea = document.getElementById('content-area');
+
+            switch(currentView) {
+                case 'dashboard':
+                    contentArea.innerHTML = renderDashboard();
+                    break;
+                case 'clients':
+                    contentArea.innerHTML = renderClients();
+                    break;
+                case 'employees':
+                    contentArea.innerHTML = renderEmployees();
+                    break;
+                case 'vendors':
+                    contentArea.innerHTML = renderVendors();
+                    break;
+                case 'account':
+                    contentArea.innerHTML = renderAccount();
+                    break;
+            }
+        }
+
+        function renderDashboard() {
+            const work = storage.get('work') || [];
+            const clients = storage.get('clients') || [];
+            const upcomingWork = work.filter(w => w.status === 'scheduled');
+            const pastWork = work.filter(w => w.status === 'completed');
+
+            return `
+                <div class="content-header">
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="content-body">
+                    <div class="card">
+                        <h3>Communication Actions</h3>
+                        <div class="comm-actions">
+                            <button class="comm-btn" onclick="alert('Voice memo feature coming soon!')">🎤 Voice Memo</button>
+                            <button class="comm-btn" onclick="alert('Text feature coming soon!')">💬 Text</button>
+                            <button class="comm-btn" onclick="alert('Upload video feature coming soon!')">🎥 Upload Video</button>
+                            <button class="comm-btn" onclick="alert('Upload photo feature coming soon!')">📸 Upload Photo</button>
+                            <button class="comm-btn" onclick="alert('Schedule call feature coming soon!')">📞 Schedule Call</button>
+                        </div>
+                    </div>
+
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Upcoming Work</h3>
+                            ${upcomingWork.length > 0 ? upcomingWork.map(w => {
+                                const client = clients.find(c => c.id === w.clientId);
+                                return `
+                                    <div class="list-item">
+                                        <div class="list-item-content">
+                                            <h4>${w.title}</h4>
+                                            <p>${client ? client.name : 'Unknown Client'}</p>
+                                            <p>📅 ${w.scheduledDate || 'Not Scheduled'}</p>
+                                            <p>💰 $${w.estimatedCost.toLocaleString()}</p>
+                                        </div>
+                                        <div class="list-item-actions">
+                                            <span class="badge badge-info">${w.status}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('') : '<div class="empty-state"><p>No upcoming work</p></div>'}
+                        </div>
+
+                        <div class="card">
+                            <h3>Past Work</h3>
+                            ${pastWork.length > 0 ? pastWork.map(w => {
+                                const client = clients.find(c => c.id === w.clientId);
+                                return `
+                                    <div class="list-item">
+                                        <div class="list-item-content">
+                                            <h4>${w.title}</h4>
+                                            <p>${client ? client.name : 'Unknown Client'}</p>
+                                        </div>
+                                        <div class="list-item-actions">
+                                            <span class="badge badge-success">Completed</span>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('') : '<div class="empty-state"><p>No past work</p></div>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderClients() {
+            const clients = storage.get('clients') || [];
+
+            return `
+                <div class="content-header">
+                    <h2>Clients / Customers</h2>
+                    <button class="btn btn-primary" onclick="showAddClientForm()">+ Add Client</button>
+                </div>
+                <div class="content-body">
+                    <div class="card">
+                        <h3>Customer List</h3>
+                        ${clients.map(client => `
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <h4>${client.name}</h4>
+                                    <p>🏠 ${client.address}</p>
+                                    <p>📧 ${client.email} | 📱 ${client.phone}</p>
+                                    <p>ID: ${client.propId}</p>
+                                </div>
+                                <div class="list-item-actions">
+                                    <button class="btn btn-secondary" onclick="viewClientDetails(${client.id})">View</button>
+                                    <button class="btn btn-danger" onclick="deleteClient(${client.id})">Delete</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Estimates</h3>
+                            <p>Active: 0 | Accepted: 0 | Declined: 0</p>
+                            <button class="btn btn-primary" onclick="alert('Create estimate feature coming soon!')">+ New Estimate</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>Work Management</h3>
+                            <button class="btn btn-primary" onclick="showAddWorkForm()">+ Schedule Work</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEmployees() {
+            const employees = storage.get('employees') || [];
+
+            return `
+                <div class="content-header">
+                    <h2>Employees</h2>
+                    <button class="btn btn-primary" onclick="showAddEmployeeForm()">+ Add Employee</button>
+                </div>
+                <div class="content-body">
+                    <div class="card">
+                        <h3>Employee List</h3>
+                        ${employees.map(emp => `
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <h4>${emp.name}</h4>
+                                    <p>👔 ${emp.role}</p>
+                                    <p>📧 ${emp.email} | 📱 ${emp.phone}</p>
+                                    <p>ID: ${emp.empId}</p>
+                                </div>
+                                <div class="list-item-actions">
+                                    ${emp.clockedIn ?
+                                        `<button class="btn btn-danger" onclick="clockOut(${emp.id})">Clock Out</button>` :
+                                        `<button class="btn btn-success" onclick="clockIn(${emp.id})">Clock In</button>`
+                                    }
+                                    <button class="btn btn-secondary" onclick="viewEmployeeDetails(${emp.id})">View</button>
+                                    <button class="btn btn-danger" onclick="deleteEmployee(${emp.id})">Delete</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="card">
+                        <h3>Contact HQ</h3>
+                        <div class="comm-actions">
+                            <button class="comm-btn" onclick="alert('Text in app feature coming soon!')">💬 Text in App</button>
+                            <button class="comm-btn" onclick="alert('Walkie-talkie feature coming soon!')">📻 Walkie-Talkie</button>
+                            <button class="comm-btn" onclick="alert('Email feature coming soon!')">📧 Email</button>
+                            <button class="comm-btn" onclick="alert('Phone feature coming soon!')">📞 Phone</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderVendors() {
+            const vendors = storage.get('vendors') || [];
+
+            return `
+                <div class="content-header">
+                    <h2>Subs / Vendors</h2>
+                    <button class="btn btn-primary" onclick="showAddVendorForm()">+ Add Vendor</button>
+                </div>
+                <div class="content-body">
+                    <div class="card">
+                        <h3>Vendor List</h3>
+                        ${vendors.map(vendor => `
+                            <div class="list-item">
+                                <div class="list-item-content">
+                                    <h4>${vendor.businessName}</h4>
+                                    <p>👤 ${vendor.contact}</p>
+                                    <p>📧 ${vendor.email} | 📱 ${vendor.phone}</p>
+                                    <p>EIN: ${vendor.ein} | ID: ${vendor.vendorId}</p>
+                                </div>
+                                <div class="list-item-actions">
+                                    <button class="btn btn-secondary" onclick="viewVendorDetails(${vendor.id})">View</button>
+                                    <button class="btn btn-danger" onclick="deleteVendor(${vendor.id})">Delete</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="grid">
+                        <div class="card">
+                            <h3>RFQ Management</h3>
+                            <p>Open: 0 | Accepted: 0 | Declined: 0</p>
+                            <button class="btn btn-primary" onclick="alert('Create RFQ feature coming soon!')">+ New RFQ</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>Payments</h3>
+                            <p>Unpaid RFQs: $0</p>
+                            <p>Paid RFQs: $0</p>
+                            <button class="btn btn-primary" onclick="alert('Invoice feature coming soon!')">View Invoices</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAccount() {
+            return `
+                <div class="content-header">
+                    <h2>Account</h2>
+                </div>
+                <div class="content-body">
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Users & Permissions</h3>
+                            <p>Manage user accounts and permissions</p>
+                            <button class="btn btn-primary" onclick="alert('User management feature coming soon!')">Manage Users</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>Payment</h3>
+                            <ul>
+                                <li>Account Statements</li>
+                                <li>Invoices</li>
+                                <li>Payment Methods</li>
+                            </ul>
+                            <button class="btn btn-primary" onclick="alert('Payment management feature coming soon!')">Manage Payments</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Speak to My Project Manager</h3>
+                        <div class="comm-actions">
+                            <button class="comm-btn" onclick="alert('Text in app feature coming soon!')">💬 Text in App</button>
+                            <button class="comm-btn" onclick="alert('Voice feature coming soon!')">🎤 Voice</button>
+                            <button class="comm-btn" onclick="alert('Photo/Video feature coming soon!')">📸 Photo / Video</button>
+                            <button class="comm-btn" onclick="alert('Email feature coming soon!')">📧 Email</button>
+                            <button class="comm-btn" onclick="alert('Phone feature coming soon!')">📞 Phone</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Preferences</h3>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" checked> Email Notifications
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" checked> SMS Notifications
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox"> Push Notifications
+                            </label>
+                        </div>
+                        <button class="btn btn-primary">Save Preferences</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Client Functions
+        function showAddClientForm() {
+            openModal('Add New Client', `
+                <form onsubmit="addClient(event)">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Property ID</label>
+                        <input type="text" name="propId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" name="address" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Primary Contact</label>
+                        <input type="text" name="primaryContact" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Contact</label>
+                        <input type="text" name="secondaryContact">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Client</button>
+                </form>
+            `);
+        }
+
+        function addClient(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const clients = storage.get('clients') || [];
+
+            const newClient = {
+                id: Date.now(),
+                name: formData.get('name'),
+                propId: formData.get('propId'),
+                address: formData.get('address'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                primaryContact: formData.get('primaryContact'),
+                secondaryContact: formData.get('secondaryContact')
+            };
+
+            clients.push(newClient);
+            storage.set('clients', clients);
+            closeModal();
+            navigateTo('clients');
+        }
+
+        function viewClientDetails(id) {
+            const clients = storage.get('clients') || [];
+            const client = clients.find(c => c.id === id);
+            if (client) {
+                openModal('Client Details', `
+                    <p><strong>Name:</strong> ${client.name}</p>
+                    <p><strong>Property ID:</strong> ${client.propId}</p>
+                    <p><strong>Address:</strong> ${client.address}</p>
+                    <p><strong>Email:</strong> ${client.email}</p>
+                    <p><strong>Phone:</strong> ${client.phone}</p>
+                    <p><strong>Primary Contact:</strong> ${client.primaryContact}</p>
+                    <p><strong>Secondary Contact:</strong> ${client.secondaryContact || 'N/A'}</p>
+                `);
+            }
+        }
+
+        function deleteClient(id) {
+            if (confirm('Are you sure you want to delete this client?')) {
+                let clients = storage.get('clients') || [];
+                clients = clients.filter(c => c.id !== id);
+                storage.set('clients', clients);
+                navigateTo('clients');
+            }
+        }
+
+        // Employee Functions
+        function showAddEmployeeForm() {
+            openModal('Add New Employee', `
+                <form onsubmit="addEmployee(event)">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Employee ID</label>
+                        <input type="text" name="empId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <input type="text" name="role" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Employee</button>
+                </form>
+            `);
+        }
+
+        function addEmployee(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const employees = storage.get('employees') || [];
+
+            const newEmployee = {
+                id: Date.now(),
+                empId: formData.get('empId'),
+                name: formData.get('name'),
+                role: formData.get('role'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                clockedIn: false
+            };
+
+            employees.push(newEmployee);
+            storage.set('employees', employees);
+            closeModal();
+            navigateTo('employees');
+        }
+
+        function clockIn(id) {
+            const employees = storage.get('employees') || [];
+            const employee = employees.find(e => e.id === id);
+            if (employee) {
+                employee.clockedIn = true;
+                employee.lastClockIn = new Date().toISOString();
+                storage.set('employees', employees);
+                navigateTo('employees');
+            }
+        }
+
+        function clockOut(id) {
+            const employees = storage.get('employees') || [];
+            const employee = employees.find(e => e.id === id);
+            if (employee) {
+                employee.clockedIn = false;
+                employee.lastClockOut = new Date().toISOString();
+                storage.set('employees', employees);
+                navigateTo('employees');
+            }
+        }
+
+        function viewEmployeeDetails(id) {
+            const employees = storage.get('employees') || [];
+            const employee = employees.find(e => e.id === id);
+            if (employee) {
+                openModal('Employee Details', `
+                    <p><strong>Name:</strong> ${employee.name}</p>
+                    <p><strong>Employee ID:</strong> ${employee.empId}</p>
+                    <p><strong>Role:</strong> ${employee.role}</p>
+                    <p><strong>Email:</strong> ${employee.email}</p>
+                    <p><strong>Phone:</strong> ${employee.phone}</p>
+                    <p><strong>Status:</strong> ${employee.clockedIn ? 'Clocked In' : 'Clocked Out'}</p>
+                `);
+            }
+        }
+
+        function deleteEmployee(id) {
+            if (confirm('Are you sure you want to delete this employee?')) {
+                let employees = storage.get('employees') || [];
+                employees = employees.filter(e => e.id !== id);
+                storage.set('employees', employees);
+                navigateTo('employees');
+            }
+        }
+
+        // Vendor Functions
+        function showAddVendorForm() {
+            openModal('Add New Vendor', `
+                <form onsubmit="addVendor(event)">
+                    <div class="form-group">
+                        <label>Business Name</label>
+                        <input type="text" name="businessName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Vendor ID</label>
+                        <input type="text" name="vendorId" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Person</label>
+                        <input type="text" name="contact" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>EIN</label>
+                        <input type="text" name="ein" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Vendor</button>
+                </form>
+            `);
+        }
+
+        function addVendor(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const vendors = storage.get('vendors') || [];
+
+            const newVendor = {
+                id: Date.now(),
+                vendorId: formData.get('vendorId'),
+                businessName: formData.get('businessName'),
+                contact: formData.get('contact'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                ein: formData.get('ein')
+            };
+
+            vendors.push(newVendor);
+            storage.set('vendors', vendors);
+            closeModal();
+            navigateTo('vendors');
+        }
+
+        function viewVendorDetails(id) {
+            const vendors = storage.get('vendors') || [];
+            const vendor = vendors.find(v => v.id === id);
+            if (vendor) {
+                openModal('Vendor Details', `
+                    <p><strong>Business Name:</strong> ${vendor.businessName}</p>
+                    <p><strong>Vendor ID:</strong> ${vendor.vendorId}</p>
+                    <p><strong>Contact:</strong> ${vendor.contact}</p>
+                    <p><strong>Email:</strong> ${vendor.email}</p>
+                    <p><strong>Phone:</strong> ${vendor.phone}</p>
+                    <p><strong>EIN:</strong> ${vendor.ein}</p>
+                `);
+            }
+        }
+
+        function deleteVendor(id) {
+            if (confirm('Are you sure you want to delete this vendor?')) {
+                let vendors = storage.get('vendors') || [];
+                vendors = vendors.filter(v => v.id !== id);
+                storage.set('vendors', vendors);
+                navigateTo('vendors');
+            }
+        }
+
+        // Work Functions
+        function showAddWorkForm() {
+            const clients = storage.get('clients') || [];
+            openModal('Schedule Work', `
+                <form onsubmit="addWork(event)">
+                    <div class="form-group">
+                        <label>Client</label>
+                        <select name="clientId" required>
+                            <option value="">Select Client</option>
+                            ${clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Scheduled Date</label>
+                        <input type="date" name="scheduledDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Cost</label>
+                        <input type="number" name="estimatedCost" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Schedule Work</button>
+                </form>
+            `);
+        }
+
+        function addWork(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const work = storage.get('work') || [];
+
+            const newWork = {
+                id: Date.now(),
+                clientId: parseInt(formData.get('clientId')),
+                title: formData.get('title'),
+                description: formData.get('description'),
+                status: 'scheduled',
+                scheduledDate: formData.get('scheduledDate'),
+                estimatedCost: parseFloat(formData.get('estimatedCost'))
+            };
+
+            work.push(newWork);
+            storage.set('work', work);
+            closeModal();
+            navigateTo('clients');
+        }
+
+        // Initialize app
+        renderContent();
+    </script>
+</body>
+</html>
